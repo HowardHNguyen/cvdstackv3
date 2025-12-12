@@ -1,82 +1,102 @@
-# 🫀 CVDStack: AI-Driven Cardiovascular Disease Prediction with Stacking Generative AI
+# 🫀 CVD Risk Prediction – Stacking Generative AI v3.0 (16 Features)
 
-**Live App:** [cvdstack.streamlit.app](https://cvdstack.streamlit.app)  
-**Repository:** [GitHub – HowardHNguyen/cvdstack](https://github.com/HowardHNguyen/cvdstack/tree/main)  
-**Creator:** Dr. Howard Nguyen, PhD — *Data Science & AI, Healthcare Analytics*
+This repository contains the code and models for a **Stacking Generative AI** system
+that predicts **10-year cardiovascular disease (CVD) risk** using data derived from
+the **Framingham Heart Study**.
 
-## 💡 Overview
+The final v3.0 model:
 
-**CVDStack** is a full-stack **Generative AI + Machine Learning platform** that predicts cardiovascular disease risk with medical-grade accuracy.  
-Built as part of my doctoral dissertation — *“Advancing Heart Failure Prediction: A Comparative Study of Traditional Machine Learning, Neural Networks, and Stacking Generative AI Models”* — this project demonstrates how **stacked ensemble AI** can outperform both classical ML and single deep-learning models in real-world healthcare data.
+- Uses **16 clinically available features** (no data leakage)
+- Balances the dataset with **CTGAN-based synthetic minority generation**
+- Stacks three base learners:
+  - Random Forest (GenAI RF)
+  - XGBoost (GenAI XGB)
+  - CNN+GRU (GenAI deep learner)
+- Trains a **Logistic Regression meta-learner** on the base model probabilities
 
-The model integrates **Generative Adversarial Networks (GANs)**, **Random Forest (RF)**, **Gradient Boosting (GBM)**, and **Convolutional Neural Networks (CNNs)** into a unified architecture, improving minority-class representation and predictive reliability.
+> ⚠️ **Disclaimer:**  
+> This project is for **research and educational purposes only** and is **not** a
+> substitute for professional medical advice, diagnosis, or treatment.
 
-## 🧠 Motivation
+---
 
-Heart disease remains the **leading global cause of death**, often driven by silent risk factors hidden in routine clinical data.  
-Traditional models capture linear relationships but miss subtle, nonlinear interactions.  
-**CVDStack** bridges this gap by generating balanced synthetic data (via GANs) and stacking multiple AI learners to achieve deeper, more interpretable insights.
+## 🌟 Model Summary (v3.0 – 16 Features)
 
-## ⚙️ Features
+- **Dataset:** Framingham Heart Study (cleaned, imputed, no leakage)
+- **Features (16):**
 
-- 🧬 **Stacking Generative AI Model:** Combines GAN + RF + GBM + CNN to enhance learning from imbalanced datasets.  
-- 📊 **Predictive Dashboard:** Real-time ROC AUC, accuracy, and precision/recall summaries.  
-- 🩺 **Explainable AI:** SHAP-based feature importance to identify clinical drivers (e.g., BMI, sysBP, totChol).  
-- 🧩 **Data Balancing:** SMOTE and CTGAN integration for minority-class synthesis.  
-- 💾 **Scalable Pipeline:** Handles datasets from 303 to 400K records seamlessly.  
-- 🌐 **Deployment:** Live Streamlit app connected to GitHub root-level Python files (no sub-dirs).
+  - Demographics: `AGE`, `SEX`, `educ`
+  - Blood Pressure: `SYSBP`, `DIABP`
+  - Lipids: `TOTCHOL`, `HDLC`, `LDLC`
+  - Metabolic: `BMI`, `GLUCOSE`, `DIABETES`
+  - Treatment: `BPMEDS`
+  - Symptoms/History: `ANGINA`, `HYPERTEN`
+  - Lifestyle: `CIGPDAY`
+  - Cardiac: `HEARTRTE`
 
-## 🧩 Methodology
+- **Target:** `CVD` (10-year cardiovascular disease event)
 
-1. **Data Engineering**  
-   - Pre-processed demographic & clinical variables (sex, age, BP, cholesterol, glucose, BMI, smoking).  
-   - Handled class imbalance using SMOTE and GAN-based data augmentation.
+- **Final Stacking Performance (balanced test set):**
 
-2. **Model Training**  
-   - Trained Random Forest, GBM, XGBoost, CNN, and Generative AI models individually.  
-   - Integrated them via a Stacking Classifier meta-learner (Logistic Regression).  
-   - Calibrated predictions using Isotonic Regression to ensure probability reliability.
+  - **AUC (ROC):** ~0.886
+  - **Accuracy:** ~0.81
+  - **Precision (CVD=1):** ~0.82 (at threshold 0.50)
+  - **Recall (CVD=1):** ~0.68 (threshold 0.50), ~0.70 (threshold 0.40)
 
-3. **Evaluation & Validation**  
-   - Cross-validation AUC ≈ **0.99**, accuracy ≈ **0.97** on 400K records.  
-   - Comparative experiments vs. Logistic Regression, RF, GBM, and CNN confirmed superiority.  
-   - Avoided overfitting via permutation testing and hold-out validation.
+A threshold of **0.40** is recommended for a screening use-case, to modestly increase
+recall for CVD while maintaining good precision.
 
-4. **Deployment & Interpretation**  
-   - Streamlit UI built with Plotly and matplotlib for visual diagnostics.  
-   - Displays model predictions, feature importance, and interactive threshold adjustment.
+---
 
-## 📈 Results Snapshot
+## 🧠 Architecture
 
-| Model | Accuracy | ROC AUC | Key Finding |
-|:------|:---------:|:-------:|-------------|
-| Logistic Regression | 0.59 – 0.68 | 0.64 – 0.73 | Limited by non-linear interactions |
-| Random Forest | 0.70 – 0.81 | 0.63 – 0.90 | Strong but sensitive to imbalance |
-| GBM / XGBoost | 0.72 – 0.86 | 0.62 – 0.97 | High variance without balancing |
-| CNN / RNN | 0.80 – 0.95 | 0.80 – 0.99 | Excellent pattern learning |
-| **Stacking Gen AI (ours)** | **0.97 +** | **0.99 +** | Best overall generalization |
+1. **Preprocessing**
+   - Impute missing continuous values with median.
+   - Impute missing binary/ordinal values with mode/median.
+   - Standardize features using `StandardScaler`.
 
-## 🧰 Tech Stack
+2. **Generative Balancing (CTGAN)**
+   - Train `CTGAN` on all 16 features + `CVD`.
+   - Generate synthetic minority samples (`CVD = 1`) to match the majority class.
+   - Concatenate real + synthetic → **balanced training dataset**.
 
-| Layer | Tools / Libraries |
-|-------|-------------------|
-| Language | Python 3.12 + Google Colab (T4 GPU) |
-| ML / AI | scikit-learn · XGBoost · LightGBM · TensorFlow/Keras · PyTorch · CTGAN · SMOTE |
-| Visualization | Plotly · matplotlib · Streamlit UI |
-| Deployment | Streamlit Cloud + GitHub (main branch root files) |
-| Environment Control | `scikit-learn==1.6.1` · `joblib==1.4.2` · `lightgbm==4.5.0` · `xgboost==2.1.1` |
+3. **Base Models**
+   - **RandomForestClassifier**
+   - **XGBClassifier**
+   - **CNN+GRU** deep network (Keras / TensorFlow)
+
+4. **Stacking Meta-Learner**
+   - For each base model, compute `P(CVD=1 | x)` on the training and test sets.
+   - Stack these probabilities into a 3D feature vector:
+     - `[p_RF, p_XGB, p_CNN]`
+   - Train a **Logistic Regression** meta-model on stacked probabilities.
+   - Final prediction is `P(CVD=1)` from the meta-learner.
+
+---
+
+## 📂 Repository Structure
+
+Example structure for v3.0:
+
+```text
+.
+├── app.py                           # Streamlit app (v3.0, 16 features)
+├── stacking_genai_v3_16.pkl         # Meta LR + RF + XGB + feature list
+├── scaler_16.pkl                    # StandardScaler for 16 features
+├── cnn_genai_v3_16.h5               # CNN+GRU Keras model
+├── frmgham2.csv                     # Framingham dataset (not included here)
+├── notebooks/
+│   ├── 01_preprocessing_v3.ipynb    # Imputation, feature selection
+│   ├── 02_ctgan_training_v3.ipynb   # CTGAN balancing
+│   ├── 03_models_stacking_v3.ipynb  # RF/XGB/CNN + stacking
+│   └── 04_evaluation_plots_v3.ipynb # ROC curves, feature importance, tables
+└── README.md
 
 
-## 📊 Live Dashboard Highlights
 
-### 🧩 Model Summary
-Displays performance metrics for each algorithm — including **AUC**, **Accuracy**, **Precision**, and **Recall** — enabling direct comparison of model reliability.
 
-### 🔍 Feature Importance
-Visualizes which clinical variables (such as **BMI**, **sysBP**, **glucose**, and **totChol**) contribute most to prediction outcomes, providing explainability for clinicians and researchers.
 
-### ⚖️ Threshold Tuning
-Allows adjustment of the decision threshold to fine-tune the balance between **Sensitivity (Recall)** and **Specificity (Precision)** for different clinical priorities.
+
 
 ### 📂 Data Upload
 Supports drag-and-drop of new CSV files, allowing external researchers or clinicians to test their own patient data and instantly visualize predictions.
