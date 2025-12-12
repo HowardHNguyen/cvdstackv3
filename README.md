@@ -74,36 +74,6 @@ recall for CVD while maintaining good precision.
 
 ---
 
-## 📂 Repository Structure
-
-Example structure for v3.0:
-
-```text
-.
-├── app.py                           # Streamlit app (v3.0, 16 features)
-├── stacking_genai_v3_16.pkl         # Meta LR + RF + XGB + feature list
-├── scaler_16.pkl                    # StandardScaler for 16 features
-├── cnn_genai_v3_16.h5               # CNN+GRU Keras model
-├── frmgham2.csv                     # Framingham dataset (not included here)
-├── notebooks/
-│   ├── 01_preprocessing_v3.ipynb    # Imputation, feature selection
-│   ├── 02_ctgan_training_v3.ipynb   # CTGAN balancing
-│   ├── 03_models_stacking_v3.ipynb  # RF/XGB/CNN + stacking
-│   └── 04_evaluation_plots_v3.ipynb # ROC curves, feature importance, tables
-└── README.md
-
-
-
-
-
-
-
-### 📂 Data Upload
-Supports drag-and-drop of new CSV files, allowing external researchers or clinicians to test their own patient data and instantly visualize predictions.
-
-### 💬 Interpretability Layer
-Includes SHAP explainers and calibration metrics to translate raw model outputs into transparent, actionable insights.
-
 ## 🧬 Research Significance
 
 > This project demonstrates that **Stacking Generative AI** can achieve medical-grade predictive accuracy and enhanced fairness for underrepresented patient groups.
@@ -121,8 +91,8 @@ It moves beyond prediction to personalized intervention — turning clinical dat
 
 ## 🧾 License
 
-**Copyright © 2025 Howard Nguyen**  
-*(MaxAIS · AICardioHealth)*
+**Copyright © 2025 Howard Nguyen, PhD**  
+*(MaxAIs · AICardioHealth)*
 
 Permission is hereby granted **with explicit written approval from Howard Nguyen** to use, copy, modify, and distribute this software and its associated documentation files.  
 Unauthorized reproduction, redistribution, or modification without prior approval is strictly prohibited.
