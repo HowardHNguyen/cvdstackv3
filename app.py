@@ -293,10 +293,9 @@ with st.sidebar:
 st.markdown(
     """
     <div style="background-color:#0f4c75;padding:18px;border-radius:8px;margin-bottom:16px;">
-      <h1 style="color:white;margin-bottom:4px;">CVD Risk Prediction – Stacking Generative AI v3.0</h1>
+      <h1 style="color:white;margin-bottom:4px;">CVD Risk Prediction – Preventive Screening Model (v3.0)</h1>
       <p style="color:#e0f2f1;margin:0;font-size:14px;">
-        10-year cardiovascular disease risk estimation using a 16-feature, non-leakage,
-        CTGAN-balanced Stacking GenAI model (RF + XGB + CNN+GRU).
+        10-Year Cardiovascular Risk Estimation Using Modifiable Risk Factors Only (Population Health & Primary Prevention)
       </p>
     </div>
     """,
